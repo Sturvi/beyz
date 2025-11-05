@@ -25,6 +25,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'accounts.apps.AccountsConfig',
+    'schedule.apps.ScheduleConfig',
 ]
 
 MIDDLEWARE = [
