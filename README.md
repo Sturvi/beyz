@@ -74,24 +74,62 @@ beyz/
 
 ### Запуск проекта
 
-1. **Клонируйте репозиторий** (если еще не сделали):
+#### Вариант 1: Автоматический скрипт (рекомендуется)
+
+**Linux/Mac:**
+```bash
+chmod +x restart.sh
+./restart.sh
+```
+
+**Windows:**
+```cmd
+restart.bat
+```
+
+#### Вариант 2: Ручной запуск
+
+1. **Перейдите в директорию проекта**:
    ```bash
-   cd /home/user/beyz
+   cd beyz
    ```
 
 2. **Запустите Docker Compose**:
    ```bash
-   docker-compose up --build
+   docker-compose up --build -d
    ```
 
-3. **Дождитесь запуска сервисов**:
+3. **Дождитесь запуска сервисов** (около 30 секунд):
    - PostgreSQL будет доступна на порту `12001`
    - Django сервер будет доступен на порту `12000`
 
-4. **Откройте браузер и перейдите**:
+4. **Проверьте статус**:
+   ```bash
+   docker-compose ps
+   docker-compose logs -f
+   ```
+
+5. **Откройте браузер и перейдите**:
    ```
    http://localhost:12000
    ```
+
+### ⚠️ Если возникли проблемы
+
+Если при запуске возникла ошибка `dependency failed to start: container beyz-db-1 exited (1)`:
+
+1. **Попробуйте упрощенную версию**:
+   ```bash
+   docker-compose -f docker-compose.simple.yml up --build
+   ```
+
+2. **Очистите старые данные**:
+   ```bash
+   docker-compose down -v
+   docker-compose up --build
+   ```
+
+3. **Смотрите подробные инструкции** в файле [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ### Тестовые данные для входа
 

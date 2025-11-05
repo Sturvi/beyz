@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: barber_postgres_simple
+    environment:
+      POSTGRES_DB: barber_db
+      POSTGRES_USER: barber_user
+      POSTGRES_PASSWORD: barber_password
+    ports:
+      - "12001:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c max_connections=200
+
+  web:
+    build: .
+    container_name: barber_web_simple
+    command: >
+      sh -c "
+      echo 'Waiting for postgres...' &&
+      sleep 10 &&
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
+      python manage.py shell -c \"
+      from django.contrib.auth import get_user_model;
+      User = get_user_model();
+      if not User.objects.filter(email='admin@barber.com').exists():
+          User.objects.create_superuser('admin@barber.com', 'admin123', role='ADMIN')
+      \" &&
+      python manage.py runserver 0.0.0.0:12000
+      "
+    volumes:
+      - .:/app
+    ports:
+      - "12000:12000"
+    environment:
+      SECRET_KEY: django-insecure-development-key-change-in-production
+      DEBUG: "True"
+      DATABASE_NAME: barber_db
+      DATABASE_USER: barber_user
+      DATABASE_PASSWORD: barber_password
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+    depends_on:
+      - db
