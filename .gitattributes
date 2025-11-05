@@ -1,0 +1,27 @@
+# Обработка переносов строк
+* text=auto
+
+# Shell scripts должны иметь LF
+*.sh text eol=lf
+entrypoint.sh text eol=lf
+
+# Batch files должны иметь CRLF
+*.bat text eol=crlf
+
+# Python files
+*.py text eol=lf
+
+# Web files
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+
+# Configuration files
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Docker files
+Dockerfile text eol=lf
+docker-compose*.yml text eol=lf
