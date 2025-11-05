@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="container">
+        <div class="profile-header">
+            <h1>Мой профиль</h1>
+            <p>Редактирование информации о барбере</p>
+        </div>
+
+        <div class="profile-content">
+            <form method="post" enctype="multipart/form-data" class="profile-form">
+                {% csrf_token %}
+
+                <div class="form-section">
+                    <h3>Основная информация</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.first_name.id_for_label }}">Имя *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.last_name.id_for_label }}">Фамилия *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Телефон</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="error-message">{{ form.phone.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.photo.id_for_label }}">Фото профиля</label>
+                        {{ form.photo }}
+                        {% if barber_profile.photo %}
+                            <p class="text-muted">Текущее фото: {{ barber_profile.photo.name }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Профессиональная информация</h3>
+
+                    <div class="form-group">
+                        <label for="{{ form.experience_years.id_for_label }}">Опыт работы (лет)</label>
+                        {{ form.experience_years }}
+                        {% if form.experience_years.errors %}
+                            <div class="error-message">{{ form.experience_years.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.specializations.id_for_label }}">Специализации</label>
+                        {{ form.specializations }}
+                        <small class="form-text">Укажите свои специализации через запятую</small>
+                        {% if form.specializations.errors %}
+                            <div class="error-message">{{ form.specializations.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.bio.id_for_label }}">О себе</label>
+                        {{ form.bio }}
+                        {% if form.bio.errors %}
+                            <div class="error-message">{{ form.bio.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        {{ form.is_available }}
+                        <label for="{{ form.is_available.id_for_label }}">Доступен для записи</label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

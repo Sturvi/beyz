@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=barber_db
+      - POSTGRES_USER=barber_user
+      - POSTGRES_PASSWORD=barber_password
+    ports:
+      - "12001:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U barber_user -d barber_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:12000
+    volumes:
+      - .:/app
+    ports:
+      - "12000:12000"
+    environment:
+      - SECRET_KEY=django-insecure-development-key-change-in-production
+      - DEBUG=True
+      - DATABASE_NAME=barber_db
+      - DATABASE_USER=barber_user
+      - DATABASE_PASSWORD=barber_password
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
